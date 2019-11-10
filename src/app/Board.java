@@ -18,7 +18,7 @@ public class Board extends JPanel implements Runnable{
     private Thread animator;
     private State[] turns;
     private State curState;
-    public Image mapBoard, roverImgRed, roverImgBlue;
+    public Image mapBoard, roverImgRed, roverImgBlue, tankImgRed, tankImgBlue, siteImg;
 
     private static PlayStatus ps;
 
@@ -33,6 +33,9 @@ public class Board extends JPanel implements Runnable{
         this.mapBoard = (new ImageIcon("src/resources/map.png")).getImage();
         this.roverImgBlue = (new ImageIcon("src/resources/rover_blue.png")).getImage();
         this.roverImgRed = (new ImageIcon("src/resources/rover_red.png")).getImage();
+        this.tankImgBlue = (new ImageIcon("src/resources/tank_blue.png")).getImage();
+        this.tankImgRed = (new ImageIcon("src/resources/tank_red.png")).getImage();
+        this.siteImg = (new ImageIcon("src/resources/site.png")).getImage();
         this.curState = turns.length > 0 ? turns[0] : null;
         ps = new PlayStatus(this.turns.length);
 
@@ -76,27 +79,6 @@ public class Board extends JPanel implements Runnable{
             }else{
                 this.curState = this.turns[ps.getTurn()];
             }
-            /*if(running){
-                curTime += (System.currentTimeMillis() - lastLoop);
-                lastLoop = System.currentTimeMillis();
-            }else{
-                curTime = ((int)(curTime / Constants.MS_PER_TURN)) * Constants.MS_PER_TURN;
-                this.curFrac = -1.0;
-            }
-            if(curTime == 0){ 
-                this.curState = this.turns.length > 0 ? this.turns[0] : null;
-                this.curFrac = 0.0;
-            }else{
-                int formingIntoIndex = (((int) curTime) / Constants.MS_PER_TURN) + 1;
-                if(formingIntoIndex < this.turns.length){
-                    double fracComplete = running ? (curTime % Constants.MS_PER_TURN)/((double)Constants.MS_PER_TURN) : 0;
-                    this.curFrac = fracComplete;
-                    this.curState = running ? this.turns[formingIntoIndex - 1].getTransitionState(this.turns[formingIntoIndex], fracComplete) : this.turns[formingIntoIndex - 1];
-                }else{
-                    this.curState = this.turns[this.turns.length - 1];
-                    curTime = Constants.MS_PER_TURN * this.turns.length;
-                }
-            } */
             // repaint
             repaint();
         }

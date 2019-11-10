@@ -21,6 +21,8 @@ public class UnitRep{
         Image img = null;
         if(this.type == 0){
             img = this.owner == 0 ? brd.roverImgBlue : brd.roverImgRed;
+        }else if(this.type == 1){
+            img = this.owner == 0 ? brd.tankImgBlue : brd.tankImgRed;
         }
         if(img == null){
             System.out.println("Error: could not find image for unit of type " + this.getType());
