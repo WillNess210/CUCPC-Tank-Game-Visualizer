@@ -23,6 +23,8 @@ public class UnitRep{
             img = this.owner == 0 ? brd.roverImgBlue : brd.roverImgRed;
         }else if(this.type == 1){
             img = this.owner == 0 ? brd.tankImgBlue : brd.tankImgRed;
+        }else if(this.type == 2){
+            img = brd.siteImg;
         }
         if(img == null){
             System.out.println("Error: could not find image for unit of type " + this.getType());
@@ -32,8 +34,10 @@ public class UnitRep{
         int imgW = img.getWidth(null);
         int imgH = img.getHeight(null);
         g2d.drawImage(img, this.x - imgW/2, this.y - imgH/2, brd);
-        g2d.setColor(Color.YELLOW);
-        g2d.drawString(this.id + "", this.x - 5, this.y - imgH/2 - 5);
+        if(this.type < 2){
+            g2d.setColor(Color.YELLOW);
+            g2d.drawString(this.id + "", this.x - 5, this.y - imgH/2 - 5);
+        }
         if(this.type == 0){
             g2d.setColor(Color.WHITE);
             g2d.drawString(this.param1 + "", this.x - 5, this.y - 1);

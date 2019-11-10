@@ -1,40 +1,22 @@
 package app;
 
 import java.awt.EventQueue;
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.IOException;
+
 import javax.swing.JFrame;
 
 public class App extends JFrame {
     
     public App() {
-        State[] turns = new State[5];
-        // TURN 1
-        turns[0] = new State();
-        turns[0].addUnit(0, 0, 0, 100, 250, 0);
-        turns[0].addUnit(1, 1, 0, 900, 250, 0);
-        // TURN 2
-        turns[1] = new State();
-        turns[1].addUnit(0, 0, 0, 200, 250, 100);
-        turns[1].addUnit(1, 1, 0, 900, 150, 0);
-        turns[1].addUnit(0, 2, 0, 500, 250, 0);
-        // TURN 3
-        turns[2] = new State();
-        turns[2].addUnit(0, 0, 0, 250, 250, 200);
-        turns[2].addUnit(1, 1, 0, 900, 250, 0);
-        turns[2].addUnit(0, 2, 0, 500, 350, 0);
-        // TURN 4
-        turns[3] = new State();
-        turns[3].addUnit(0, 0, 0, 400, 250, 300);
-        turns[3].addUnit(1, 1, 0, 900, 350, 0);
-        // TURN 5
-        turns[4] = new State();
-        turns[4].addUnit(0, 0, 0, 500, 250, 1000);
-        turns[4].addUnit(1, 1, 0, 900, 250, 0);
-        initUI(turns);
+        initUIFromFile("src/replays/ex_replay.log");
     }
 
-    private void initUI(State[] turns) {
+    private void initUI(State sites, State[] turns) {
 
-        add(new Board(turns));
+        add(new Board(sites, turns));
 
         setResizable(false);
         pack();
@@ -43,6 +25,45 @@ public class App extends JFrame {
         setLocationRelativeTo(null);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
     }    
+
+    private void initUIFromFile(String filename){
+        File replayFile = new File(filename);
+        if(!replayFile.exists()){
+            System.out.println(("File not found. Input file: " + filename));
+            return;
+        }
+        State sites = new State();
+        State[] turns = null;
+        // STARTING LOADING PROCESS
+        try{
+            BufferedReader reader = new BufferedReader(new FileReader(filename));
+            int winner = Integer.parseInt(reader.readLine());
+            String[] scoreLine = reader.readLine().split(" ");
+            int score_0 = Integer.parseInt(scoreLine[0]);
+            int score_1 = Integer.parseInt(scoreLine[1]);
+            int numSites = Integer.parseInt(reader.readLine());
+            for(int i = 0; i < numSites; i++){
+                String[] locLine = reader.readLine().split(" ");
+                sites.addUnit(-1, i, 2, Integer.parseInt(locLine[0]), Integer.parseInt(locLine[1]), -1);
+            }
+            int numTurns = Integer.parseInt(reader.readLine());
+            turns = new State[numTurns];
+            for(int i = 0; i < numTurns; i++){
+                turns[i] = new State();
+                int numUnitsInTurn = Integer.parseInt(reader.readLine());
+                for(int j = 0; j < numUnitsInTurn; j++){
+                    String unitLine = reader.readLine();
+                    turns[i].addUnit(unitLine);
+                }
+            }
+        } catch (IOException e){
+            e.printStackTrace();
+        }
+        // STARTING VIS
+        if(turns != null){
+            initUI(sites, turns);
+        }
+    }
     
     public static void main(String[] args) {
         

@@ -17,12 +17,12 @@ public class Board extends JPanel implements Runnable{
 
     private Thread animator;
     private State[] turns;
-    private State curState;
+    private State curState, sites;
     public Image mapBoard, roverImgRed, roverImgBlue, tankImgRed, tankImgBlue, siteImg;
 
     private static PlayStatus ps;
 
-    public Board(State[] turns){
+    public Board(State sites, State[] turns){
         setLayout(null);
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
@@ -39,6 +39,8 @@ public class Board extends JPanel implements Runnable{
         this.curState = turns.length > 0 ? turns[0] : null;
         ps = new PlayStatus(this.turns.length);
 
+        this.sites = sites;
+
         // adding buttons
         this.addButtons();
     }
@@ -54,6 +56,10 @@ public class Board extends JPanel implements Runnable{
         // draw
         // DRAW BACKGROUND
         g2d.drawImage(this.mapBoard, 0, 0, this);
+        // DRAW SITES
+        if(this.sites != null){
+            this.sites.drawState(g2d, this);
+        }
         // DRAW STATE (if exists)
         if(this.curState != null){
             this.curState.drawState(g2d, this);
