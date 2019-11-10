@@ -10,8 +10,8 @@ import javax.swing.JFrame;
 
 public class App extends JFrame {
     
-    public App() {
-        initUIFromFile("src/replays/ex_replay.log");
+    public App(String filename) {
+        initUIFromFile(filename);
     }
 
     private void initUI(State sites, State[] turns) {
@@ -66,9 +66,14 @@ public class App extends JFrame {
     }
     
     public static void main(String[] args) {
-        
         EventQueue.invokeLater(() -> {
-            App ex = new App();
+            if(args.length != 1){
+                System.out.println("Error: needs 1 parameter of filename");
+                return;
+            }
+            String filename = args[0];
+            System.out.println("Loading file: " + filename);
+            App ex = new App(filename);
             ex.setVisible(true);
         });
     }
