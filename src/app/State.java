@@ -4,9 +4,9 @@ import java.util.HashMap;
 import java.awt.Graphics2D;
 
 public class State{
-    private HashMap<Integer, UnitRep> units = new HashMap<Integer, UnitRep>();
+    private HashMap<String, UnitRep> units = new HashMap<String, UnitRep>();
     public State(){
-        units = new HashMap<Integer, UnitRep>();
+        units = new HashMap<String, UnitRep>();
     }
     public void addUnit(String lineFromLog){
         String[] splitLine = lineFromLog.split(" ");
@@ -20,7 +20,7 @@ public class State{
         this.addUnit(new UnitRep(owner, id, type, x, y, param1));
     }
     public void addUnit(UnitRep u){
-        units.put(u.getID(), u);
+        units.put(u.getHashMapID(), u);
     }
     public void drawState(Graphics2D g2d, Board brd){
         for(UnitRep u : this.units.values()){
@@ -28,10 +28,10 @@ public class State{
         }
     }
     public UnitRep getUnitRep(UnitRep u){
-        return this.getUnitRep(u.getID());
+        return this.getUnitRep(u.getHashMapID());
     }
-    public UnitRep getUnitRep(int id){
-        return this.units.get(id);
+    public UnitRep getUnitRep(String hashMapID){
+        return this.units.get(hashMapID);
     }
     public State getTransitionState(State next, double fracComplete){
         State nState = new State();

@@ -14,6 +14,9 @@ public class UnitRep{
         this.y = y;
         this.param1 = param1;
     }
+    public int getOwner(){
+        return this.owner;
+    }
     public int getType(){
         return this.type;
     }
@@ -57,5 +60,8 @@ public class UnitRep{
         int ny = (int) (this.y + ((next.y - this.y) * fracCompleted));;
         int np1 = (int) (this.param1 + ((next.param1 - this.param1) * fracCompleted));
         return new UnitRep(this.owner, this.id, this.type, nx, ny, np1);
+    }
+    public String getHashMapID(){
+        return this.getOwner() + "_" + this.getID();
     }
 }
