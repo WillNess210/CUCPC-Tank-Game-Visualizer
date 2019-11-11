@@ -50,6 +50,9 @@ public class App extends JFrame {
             turns = new State[numTurns];
             for(int i = 0; i < numTurns; i++){
                 turns[i] = new State();
+                String[] scoreStrings = reader.readLine().split(" ");
+                turns[i].setScore(0, Integer.parseInt(scoreStrings[0]));
+                turns[i].setScore(1, Integer.parseInt(scoreStrings[1]));
                 int numUnitsInTurn = Integer.parseInt(reader.readLine());
                 for(int j = 0; j < numUnitsInTurn; j++){
                     String unitLine = reader.readLine();

@@ -58,7 +58,7 @@ public class Board extends JPanel implements Runnable{
         g2d.drawImage(this.mapBoard, 0, 0, this);
         // DRAW SITES
         if(this.sites != null){
-            this.sites.drawState(g2d, this);
+            this.sites.drawUnits(g2d, this);
         }
         // DRAW STATE (if exists)
         if(this.curState != null){
