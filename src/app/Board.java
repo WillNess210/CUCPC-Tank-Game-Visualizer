@@ -21,7 +21,7 @@ import java.awt.event.*;
 public class Board extends JPanel implements Runnable{
     private static final int MS_PER_LOOP = 100;
     private final int B_WIDTH = 1000, B_HEIGHT = 500+125;
-
+    private final long MIN_FRAME_LENGTH = (long)(1000/30);
     private Thread animator;
     private State[] turns;
     private State curState, sites;
@@ -116,6 +116,7 @@ public class Board extends JPanel implements Runnable{
     @Override
     public void run(){
         while(true){
+        	long turnStart = System.currentTimeMillis();
             // update game state
             ps.tick();
             if(ps.running()){
@@ -125,6 +126,9 @@ public class Board extends JPanel implements Runnable{
             }
             // repaint
             repaint();
+            while(System.currentTimeMillis() - turnStart < MIN_FRAME_LENGTH) {
+            	// do nothing
+            }
         }
     }
 
