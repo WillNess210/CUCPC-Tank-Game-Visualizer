@@ -77,7 +77,13 @@ public class App extends JFrame {
     public static void main(String[] args) {
         EventQueue.invokeLater(() -> {
             if(args.length != 1){
-                System.out.println("Error: needs 1 parameter of filename");
+                System.out.println("Error: needs 1 parameter of filename instead of " + args.length + ".");
+                if(args.length > 1) {
+                	System.out.println("Currently receiving:");
+                	for(String arg : args) {
+                		System.out.println(arg);
+                	}
+                }
                 return;
             }
             String filename = args[0];
