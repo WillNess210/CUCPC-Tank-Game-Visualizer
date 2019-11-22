@@ -20,7 +20,7 @@ import java.awt.event.*;
 
 public class Board extends JPanel implements Runnable{
     private static final int MS_PER_LOOP = 100;
-    private final int B_WIDTH = 1000, B_HEIGHT = 500+125;
+    private final int B_WIDTH = Constants.WIDTH, B_HEIGHT = Constants.HEIGHT+125;
     private final long MIN_FRAME_LENGTH = (long)(1000/30);
     private Thread animator;
     private State[] turns;
@@ -43,6 +43,7 @@ public class Board extends JPanel implements Runnable{
         this.turns = turns;
         // loading map image
         this.mapBoard = (new ImageIcon(Board.class.getResource("/resources/map.png"))).getImage();
+        this.mapBoard = this.mapBoard.getScaledInstance(Constants.WIDTH, Constants.HEIGHT+125, Image.SCALE_DEFAULT);
         this.roverImgBlue = (new ImageIcon(Board.class.getResource("/resources/rover_blue.png"))).getImage();
         this.roverImgRed = (new ImageIcon(Board.class.getResource("/resources/rover_red.png"))).getImage();
         this.tankImgBlue = (new ImageIcon(Board.class.getResource("/resources/tank_blue.png"))).getImage();
@@ -85,24 +86,24 @@ public class Board extends JPanel implements Runnable{
         	g2d.setColor(ps.getWinnerColor(winner));
         	switch(winner) {
         		case -1:
-        			g2d.drawString("Winner: TIE" , 500, 515);
+        			g2d.drawString("Winner: TIE" , Constants.WIDTH/2, Constants.HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), 430, 515);
+                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
         			break;
         		case 0:
-        			g2d.drawString("Winner: BLUE (0)" , 500, 515);
+        			g2d.drawString("Winner: BLUE (0)" , Constants.WIDTH/2, Constants.HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), 430, 515);
+                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
         			break;
         		case 1:
-        			g2d.drawString("Winner: RED (1)" , 500, 515);
+        			g2d.drawString("Winner: RED (1)" , Constants.WIDTH/2, Constants.HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), 430, 515);
+                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
         			break;
         	}
         }else {
         	g2d.setColor(Color.BLACK);
-            g2d.drawString(ps.getTurnStringWithFrac(), 500, 515);
+            g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2, Constants.HEIGHT+15);
         }
         
     }

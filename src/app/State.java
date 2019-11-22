@@ -69,8 +69,8 @@ public class State{
         	this.drawExplosions(g2d, brd);
         }
         g2d.setColor(Color.BLACK);
-        g2d.drawString("Blue Score:   " + this.scores[0], 5, 515);
-        g2d.drawString("Red Score:    " + this.scores[1], 800, 515);
+        g2d.drawString("Blue Score:   " + this.scores[0], 5, Constants.HEIGHT+15);
+        g2d.drawString("Red Score:    " + this.scores[1], Constants.WIDTH-200, Constants.HEIGHT+15);
     }
     public UnitRep getUnitRep(UnitRep u){
         return this.getUnitRep(u.getHashMapID());
