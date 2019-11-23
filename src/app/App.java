@@ -14,9 +14,9 @@ public class App extends JFrame {
         initUIFromFile(filename);
     }
 
-    private void initUI(State sites, State[] turns) {
+    private void initUI(State sites, State[] turns, int mapWidth, int mapHeight, int deploymentType) {
 
-        add(new Board(sites, turns));
+        add(new Board(sites, turns, mapWidth, mapHeight, deploymentType));
 
         setResizable(false);
         pack();
@@ -34,6 +34,9 @@ public class App extends JFrame {
         }
         State sites = new State();
         State[] turns = null;
+        int mapWidth = -1;
+        int mapHeight = -1;
+        int deploymentType = -1;
         // STARTING LOADING PROCESS
         try{
             BufferedReader reader = new BufferedReader(new FileReader(filename));
@@ -41,6 +44,10 @@ public class App extends JFrame {
             String[] scoreLine = reader.readLine().split(" ");
             int score_0 = Integer.parseInt(scoreLine[0]);
             int score_1 = Integer.parseInt(scoreLine[1]);
+            String[] mapLine = reader.readLine().split(" ");
+            mapWidth = Integer.parseInt(mapLine[0]);
+            mapHeight = Integer.parseInt(mapLine[1]);
+            deploymentType = Integer.parseInt(mapLine[2]);
             int numSites = Integer.parseInt(reader.readLine());
             for(int i = 0; i < numSites; i++){
                 String[] locLine = reader.readLine().split(" ");
@@ -70,7 +77,7 @@ public class App extends JFrame {
         }
         // STARTING VIS
         if(turns != null){
-            initUI(sites, turns);
+            initUI(sites, turns, mapWidth, mapHeight, deploymentType);
         }
     }
     

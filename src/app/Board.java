@@ -8,7 +8,6 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import javax.swing.event.ChangeEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
-import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -20,7 +19,8 @@ import java.awt.event.*;
 
 public class Board extends JPanel implements Runnable{
     private static final int MS_PER_LOOP = 100;
-    private final int B_WIDTH = Constants.WIDTH, B_HEIGHT = Constants.HEIGHT+125;
+    private int B_WIDTH;
+    private int B_HEIGHT;
     private final long MIN_FRAME_LENGTH = (long)(1000/30);
     private Thread animator;
     private State[] turns;
@@ -29,7 +29,7 @@ public class Board extends JPanel implements Runnable{
     private static PlayStatus ps;
     private JPanel controlPanel, sliderPanel, turnPanel;
     
-    public Board(State sites, State[] turns){
+    public Board(State sites, State[] turns, int width, int height, int deploymentType){
         setLayout(new BorderLayout());
         setBackground(Color.BLACK);
         setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
@@ -38,12 +38,14 @@ public class Board extends JPanel implements Runnable{
         this.controlPanel.setLayout(new BorderLayout());
         this.sliderPanel = new JPanel(new BorderLayout());
         this.turnPanel = new JPanel(new FlowLayout());
+        this.B_WIDTH = width;
+        this.B_HEIGHT = height+125;
         
         // handling states
         this.turns = turns;
         // loading map image
         this.mapBoard = (new ImageIcon(Board.class.getResource("/resources/map.png"))).getImage();
-        this.mapBoard = this.mapBoard.getScaledInstance(Constants.WIDTH, Constants.HEIGHT+125, Image.SCALE_DEFAULT);
+        this.mapBoard = this.mapBoard.getScaledInstance(this.B_WIDTH, this.B_HEIGHT+125, Image.SCALE_DEFAULT);
         this.roverImgBlue = (new ImageIcon(Board.class.getResource("/resources/rover_blue.png"))).getImage();
         this.roverImgRed = (new ImageIcon(Board.class.getResource("/resources/rover_red.png"))).getImage();
         this.tankImgBlue = (new ImageIcon(Board.class.getResource("/resources/tank_blue.png"))).getImage();
@@ -86,24 +88,24 @@ public class Board extends JPanel implements Runnable{
         	g2d.setColor(ps.getWinnerColor(winner));
         	switch(winner) {
         		case -1:
-        			g2d.drawString("Winner: TIE" , Constants.WIDTH/2, Constants.HEIGHT+15);
+        			g2d.drawString("Winner: TIE" , this.B_WIDTH/2, this.B_HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
+                    g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2-70, this.B_HEIGHT+15);
         			break;
         		case 0:
-        			g2d.drawString("Winner: BLUE (0)" , Constants.WIDTH/2, Constants.HEIGHT+15);
+        			g2d.drawString("Winner: BLUE (0)" , this.B_WIDTH/2, this.B_HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
+                    g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2-70, this.B_HEIGHT+15);
         			break;
         		case 1:
-        			g2d.drawString("Winner: RED (1)" , Constants.WIDTH/2, Constants.HEIGHT+15);
+        			g2d.drawString("Winner: RED (1)" , this.B_WIDTH/2, this.B_HEIGHT+15);
         			g2d.setColor(Color.BLACK);
-                    g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2-70, Constants.HEIGHT+15);
+                    g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2-70, this.B_HEIGHT+15);
         			break;
         	}
         }else {
         	g2d.setColor(Color.BLACK);
-            g2d.drawString(ps.getTurnStringWithFrac(), Constants.WIDTH/2, Constants.HEIGHT+15);
+            g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2, this.B_HEIGHT+15);
         }
         
     }
@@ -191,6 +193,12 @@ public class Board extends JPanel implements Runnable{
         	}
         });
         this.sliderPanel.add(skipper);        
+    }
+    public int getWidth() {
+    	return this.B_WIDTH;
+    }
+    public int getHeight() {
+    	return this.B_HEIGHT;
     }
 
 }
