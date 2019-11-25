@@ -19,7 +19,7 @@ public class State{
         this.frac = 0;
     }
     public void setExplosions(ArrayList<Integer[]> explosions) {
-    	this.explosions = explosions; 
+    	this.explosions = explosions;
     }
     public ArrayList<Integer[]> getExplosions(){
     	return this.explosions;
@@ -69,8 +69,8 @@ public class State{
         	this.drawExplosions(g2d, brd);
         }
         g2d.setColor(Color.BLACK);
-        g2d.drawString("Blue Score:   " + this.scores[0], 5, brd.getHeight()+15);
-        g2d.drawString("Red Score:    " + this.scores[1], brd.getWidth()-200, brd.getHeight()+15);
+        g2d.drawString("Blue Score:   " + this.scores[0], 5, brd.getBHeight()+15);
+        g2d.drawString("Red Score:    " + this.scores[1], brd.getBWidth()-200, brd.getBHeight()+15);
     }
     public UnitRep getUnitRep(UnitRep u){
         return this.getUnitRep(u.getHashMapID());

@@ -8,6 +8,14 @@ import javax.swing.plaf.basic.BasicSliderUI;
 import javax.swing.event.ChangeEvent;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.geom.Ellipse2D.Double;
+import java.awt.geom.Rectangle2D;
+import java.awt.BasicStroke;
+import java.awt.Polygon;
+import java.awt.Rectangle;
+import java.awt.geom.Area;
+import java.awt.geom.Ellipse2D;
+import java.awt.GridLayout;
 import java.awt.RenderingHints;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -21,6 +29,7 @@ public class Board extends JPanel implements Runnable{
     private static final int MS_PER_LOOP = 100;
     private int B_WIDTH;
     private int B_HEIGHT;
+    private int deploymentType;
     private final long MIN_FRAME_LENGTH = (long)(1000/30);
     private Thread animator;
     private State[] turns;
@@ -29,29 +38,33 @@ public class Board extends JPanel implements Runnable{
     private static PlayStatus ps;
     private JPanel controlPanel, sliderPanel, turnPanel;
     
-    public Board(State sites, State[] turns, int width, int height, int deploymentType){
+    public Board(State sites, State[] turns, int mapWidth, int mapHeight, int deploymentType){
         setLayout(new BorderLayout());
-        setBackground(Color.BLACK);
-        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT));
+        setBackground(Color.WHITE);
+        this.B_WIDTH = mapWidth;
+        this.B_HEIGHT = mapHeight;
+        this.deploymentType = deploymentType;
+        setPreferredSize(new Dimension(B_WIDTH, B_HEIGHT+125));
         
         this.controlPanel = new JPanel();
         this.controlPanel.setLayout(new BorderLayout());
         this.sliderPanel = new JPanel(new BorderLayout());
         this.turnPanel = new JPanel(new FlowLayout());
-        this.B_WIDTH = width;
-        this.B_HEIGHT = height+125;
         
         // handling states
         this.turns = turns;
+        
         // loading map image
         this.mapBoard = (new ImageIcon(Board.class.getResource("/resources/map.png"))).getImage();
-        this.mapBoard = this.mapBoard.getScaledInstance(this.B_WIDTH, this.B_HEIGHT+125, Image.SCALE_DEFAULT);
+        this.mapBoard = this.mapBoard.getScaledInstance(this.B_WIDTH, this.B_HEIGHT, Image.SCALE_DEFAULT);
         this.roverImgBlue = (new ImageIcon(Board.class.getResource("/resources/rover_blue.png"))).getImage();
         this.roverImgRed = (new ImageIcon(Board.class.getResource("/resources/rover_red.png"))).getImage();
         this.tankImgBlue = (new ImageIcon(Board.class.getResource("/resources/tank_blue.png"))).getImage();
         this.tankImgRed = (new ImageIcon(Board.class.getResource("/resources/tank_red.png"))).getImage();
         this.siteImg = (new ImageIcon(Board.class.getResource("/resources/site.png"))).getImage();
         this.explosionImg = (new ImageIcon(Board.class.getResource("/resources/explosion.png"))).getImage();
+
+        
         this.curState = turns.length > 0 ? turns[0] : null;
         ps = new PlayStatus(this.turns.length);
 
@@ -74,6 +87,65 @@ public class Board extends JPanel implements Runnable{
         // draw
         // DRAW BACKGROUND
         g2d.drawImage(this.mapBoard, 0, 0, this);
+        // DRAW DEPLOYMENT ZONES
+        g2d.setStroke(new BasicStroke(3));
+        if (this.deploymentType == 1) {
+        	g2d.setColor(Color.BLUE);
+        	int[] px1 = new int[]{0, 305, (int)(this.B_WIDTH/2)-229, 305, 0};
+            int[] py1 = new int[]{0, 0, (int)this.B_HEIGHT/2, this.B_HEIGHT, this.B_HEIGHT};
+        	g2d.drawPolygon(px1, py1, 5);
+        	g2d.setColor(Color.RED);
+        	int[] px2 = new int[]{this.B_WIDTH, this.B_WIDTH-305, (int)(this.B_WIDTH/2)+229, this.B_WIDTH-305, this.B_WIDTH};
+            int[] py2 = new int[]{0, 0, (int)this.B_HEIGHT/2, this.B_HEIGHT, this.B_HEIGHT};
+        	g2d.drawPolygon(px2, py2, 5);
+        }
+        else if (this.deploymentType == 2) {
+        	g2d.setColor(Color.BLUE);
+        	g2d.draw(new Rectangle2D.Double(0, 0, this.B_WIDTH, (int) this.B_HEIGHT/2 - 305));
+        	g2d.setColor(Color.RED);
+        	g2d.draw(new Rectangle2D.Double(0, (int) this.B_HEIGHT/2+305, this.B_WIDTH, (int) this.B_HEIGHT/2 - 305));
+        }
+        else if (this.deploymentType == 3) {
+        	Ellipse2D center = new Ellipse2D.Double((int)this.B_WIDTH/2-229, (int)this.B_HEIGHT/2-229, 457, 457);
+        	g2d.setColor(Color.BLUE);
+        	Rectangle part11 = new Rectangle(0, 0, (int)this.B_WIDTH/2, (int)this.B_HEIGHT/2);
+    		Area deployArea1 = new Area(part11);
+    		deployArea1.subtract(new Area(center));
+    		g2d.draw(deployArea1);
+    		
+    		g2d.setColor(Color.RED);
+    		Rectangle part12 = new Rectangle((int)this.B_WIDTH/2, (int)this.B_HEIGHT/2, (int)this.B_WIDTH/2, (int)this.B_HEIGHT/2);
+    		Area deployArea2 = new Area(part12);
+    		deployArea2.subtract(new Area(center));
+    		g2d.draw(deployArea2);
+        }
+        else if (this.deploymentType == 4) {
+    		g2d.setColor(Color.BLUE);
+			g2d.draw(new Rectangle(0, 0, (int)(this.B_WIDTH/2)-305, this.B_HEIGHT));
+			g2d.setColor(Color.RED);
+			g2d.draw(new Rectangle((int)this.B_WIDTH/2+305, 0, (int)(this.B_WIDTH/2)-305, this.B_HEIGHT));
+    	}
+        else if (this.deploymentType == 5) {
+        	g2d.setColor(Color.BLUE);
+        	int[] px1 = new int[]{0, this.B_WIDTH, this.B_WIDTH, (int)(this.B_WIDTH/2), 0};
+            int[] py1 = new int[]{0, 0, 152, (int)(this.B_HEIGHT/2)-229, 152};
+    		g2d.draw(new Area(new Polygon(px1, py1, 5)));
+    		g2d.setColor(Color.RED);
+    		int[] px2 = new int[]{0, this.B_WIDTH, this.B_WIDTH, (int)(this.B_WIDTH/2), 0};
+            int[] py2 = new int[]{this.B_HEIGHT, this.B_HEIGHT, this.B_HEIGHT-152, (int)(this.B_HEIGHT/2)+229, this.B_HEIGHT-152};
+    		g2d.draw(new Area(new Polygon(px2, py2, 5)));
+    		
+        }
+        else if (this.deploymentType == 6) {
+        	g2d.setColor(Color.BLUE);
+        	int[] px1 = new int[]{0, this.B_WIDTH-305, 0};
+            int[] py1 = new int[]{305, this.B_HEIGHT, this.B_HEIGHT};
+            g2d.draw(new Area(new Polygon(px1, py1, 3)));
+    		g2d.setColor(Color.RED);
+    		int[] px2 = new int[]{305, this.B_WIDTH, this.B_WIDTH};
+            int[] py2 = new int[]{0, 0, this.B_HEIGHT-305};
+            g2d.draw(new Area(new Polygon(px2, py2, 3)));
+        }
         // DRAW SITES
         if(this.sites != null){
             this.sites.drawUnits(g2d, this);
@@ -93,7 +165,7 @@ public class Board extends JPanel implements Runnable{
                     g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2-70, this.B_HEIGHT+15);
         			break;
         		case 0:
-        			g2d.drawString("Winner: BLUE (0)" , this.B_WIDTH/2, this.B_HEIGHT+15);
+        			g2d.drawString("Winner: BLUE (0)" , this.B_WIDTH/2, 515);
         			g2d.setColor(Color.BLACK);
                     g2d.drawString(ps.getTurnStringWithFrac(), this.B_WIDTH/2-70, this.B_HEIGHT+15);
         			break;
@@ -194,11 +266,10 @@ public class Board extends JPanel implements Runnable{
         });
         this.sliderPanel.add(skipper);        
     }
-    public int getWidth() {
+    int getBWidth() {
     	return this.B_WIDTH;
     }
-    public int getHeight() {
+    int getBHeight() {
     	return this.B_HEIGHT;
     }
-
 }
