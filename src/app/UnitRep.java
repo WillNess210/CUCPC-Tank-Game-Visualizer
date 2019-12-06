@@ -41,7 +41,7 @@ public class UnitRep{
             g2d.setColor(Color.YELLOW);
             g2d.drawString(this.id + "", this.x - 5, this.y - imgH/2 - 5);
         }
-        if(this.type == 0){
+        if(this.type < 2){
             g2d.setColor(Color.WHITE);
             g2d.drawString(this.param1 + "", this.x - 5, this.y - 1);
         }
