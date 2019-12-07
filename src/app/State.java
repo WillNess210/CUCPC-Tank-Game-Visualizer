@@ -71,6 +71,19 @@ public class State{
         g2d.setColor(Color.BLACK);
         g2d.drawString("Blue Score:   " + this.scores[0], 5, 515);
         g2d.drawString("Red Score:    " + this.scores[1], 800, 515);
+        int[] numUnits = this.getNumUnitsOnEachTeam();
+        g2d.drawString("Blue units: " + numUnits[0], 5, 525);
+        g2d.drawString("Red units: " + numUnits[1], 800, 525);
+    }
+    public int[] getNumUnitsOnEachTeam() {
+    	int[] results = {0, 0};
+    	for(UnitRep u : this.units.values()) {
+    		results[u.getOwner()]++;
+    	}
+    	return results;
+    }
+    public int getNumUnits() {
+    	return this.units.size();
     }
     public UnitRep getUnitRep(UnitRep u){
         return this.getUnitRep(u.getHashMapID());
